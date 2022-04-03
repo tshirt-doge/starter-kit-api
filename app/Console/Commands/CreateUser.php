@@ -50,7 +50,8 @@ class CreateUser extends Command
         );
 
         try {
-            Validator::validate($attrs,
+            Validator::validate(
+                $attrs,
                 [
                     'email' => ['unique:users,email', 'email'],
                     'password' => ['required', 'min:6'],

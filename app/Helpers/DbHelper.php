@@ -19,6 +19,5 @@ class DbHelper
      */
     public static function execTransaction($queries)
     {
-
     }
 }

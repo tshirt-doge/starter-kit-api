@@ -104,5 +104,4 @@ class Handler extends ExceptionHandler
         }
         return $errors;
     }
-
 }

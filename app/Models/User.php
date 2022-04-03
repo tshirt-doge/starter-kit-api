@@ -83,7 +83,7 @@ class User extends Authenticatable
      *
      * @return Collection
      */
-    public function getRolesAttribute() : array
+    public function getRolesAttribute(): array
     {
         return $this->getRoleNames();
     }
