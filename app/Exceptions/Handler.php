@@ -86,7 +86,7 @@ class Handler extends ExceptionHandler
                 break;
             // if we f** up somewhere else
             default:
-                // TODO: Logging
+                // TODO: Logging - $e->getMessage()
                 $response = response()->json(['message' => $e->getMessage(), 'error_code' => ApiErrorResponse::SERVER_ERROR, 'errors' => null], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
