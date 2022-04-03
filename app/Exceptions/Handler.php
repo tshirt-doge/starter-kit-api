@@ -94,7 +94,7 @@ class Handler extends ExceptionHandler
     }
 
     /**
-     * Transform validation error messages. We want consistent error formats
+     * Transform validation error messages. We want consistent error formats.
      */
     private function transformErrors(ValidationException $exception): object
     {
