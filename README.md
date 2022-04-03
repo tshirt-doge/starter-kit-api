@@ -8,6 +8,7 @@ Starter-Kit-API is a Laravel 9 RESTFul starter kit for SPA and mobile clients. T
 - Full implementation Forgot and Reset Password with Email Notification
 
 ## Set up your local development environment
+- Minimum of PHP 8.1 installed with a database engine that supports JSON types and Full text search (eg. MySQL8, MariaDB 10.5)
 - Create a **.env** file from the **.env.example** that came with this project
 - In the **.env** file, update the **APP_NAME**, **APP_URL**, the **DB_** variables, and the MAIL variables if you decide to use a different test mailing service or account. You may also change the **SPA_RESET_PASSWORD_URL** if you're spinning a different URL for your SPA.
 - Locate your **php.ini** file and change the value **upload_max_filesize** to **8M**. See this [guide](https://devanswers.co/ubuntu-php-php-ini-configuration-file/) if you're having trouble finding the directory of your php.ini file
@@ -34,7 +35,5 @@ Starter-Kit-API is a Laravel 9 RESTFul starter kit for SPA and mobile clients. T
 - Follow and implement the [PHPDoc](https://docs.phpdoc.org/3.0/guide/guides/docblocks.html) style guide
 - Use `app\Exceptions\Handler.php` for centralized error handling
 
-
 ## Authors
-
-- Jego Carlo Ramos
+- Jego Carlo Ramos (tshirt-doge)

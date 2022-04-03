@@ -57,7 +57,7 @@ namespace App\Models{
  * @property string $last_name
  * @property string|null $middle_name
  * @property string|null $mobile_number
- * @property string|null $sex
+ * @property \App\Enums\SexEnum|null $sex
  * @property \Illuminate\Support\Carbon|null $birthday
  * @property string|null $home_address
  * @property string|null $barangay

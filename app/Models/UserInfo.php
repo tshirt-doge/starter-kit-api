@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\SexEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -41,12 +42,25 @@ class UserInfo extends Model
     ];
 
     /**
+     * The attributes that should be hidden.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'id',
+        'user_id',
+        'created_at',
+        'updated_at'
+    ];
+
+    /**
      * The attributes that should be cast.
      *
      * @var array<string, string>
      */
     protected $casts = [
         'birthday' => 'date',
+        'sex' => SexEnum::class, // Laravel 9 enum casting. @see https://laravel.com/docs/9.x/releases
     ];
 
     /**
