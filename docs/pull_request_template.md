@@ -2,30 +2,31 @@
 - Run `php artisan db:seed --class=SeederMe`
 - Add these missing `env` variables
 - Attach a PDF doc if needed
+- Delete part if none
+
+
+## 📦 Packages
+- Installed package A: https://link-to-package.com
+- Delete part if none
 
 
 ## 🗃️ Migrations
 - 2022_04_01_12340_create_table_a.php
 - 2022_04_02_010719_alter_column_a_table_name.php => `table_b` table
+- Delete part if none
 
-
-## 📦 Packages
-- Installed package A: https://link-to-package.com
 
 ## 📝  Changelog
 **Summary**
 - Added new QR scanner
 - Removed extra dependencies
 - Improved database query on some module
+- Attach screenshots if needed
 
-## 📸 Attach screenshots if needed
-
-<hr>
 
 ## ☑️ Coding Standard Checklist
-
 - [ ] You ran `php artisan fix:style` for this PR
-- [ ] Follow the team's standard conventions -- consistency will get us far
+- [ ] Follow the team's standard conventions. Consistency contributes to readability
 - [ ] Don't comment it out. Just remove (or I'll smite you 🌩️)
 - [ ] Keep it simple stupid. Simpler is always better. Reduce complexity as much as possible
 - [ ] Code is DRY (Don't Repeat Yourself) -- but keep complexity to a minimum
