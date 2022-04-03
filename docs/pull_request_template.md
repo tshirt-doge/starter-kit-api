@@ -24,6 +24,7 @@
 
 ## ☑️ Coding Standard Checklist
 
+- [ ] You ran `php artisan fix:style` for this PR
 - [ ] Follow the team's standard conventions -- consistency will get us far
 - [ ] Don't comment it out. Just remove (or I'll smite you 🌩️)
 - [ ] Keep it simple stupid. Simpler is always better. Reduce complexity as much as possible
@@ -32,8 +33,8 @@
 - [ ] Use explanatory variables and choose descriptive and unambiguous names
 - [ ] Keep configurable data at high levels. Avoid magic numbers
 - [ ] Use dependency injection and service providers
-- [ ] Always try to explain yourself in code thigking of leaving a comment. Don't be redundant
+- [ ] Always try to explain yourself in code thinking of leaving a comment. Don't be redundant
 - [ ] Use comments as explanation of intent or clarification of code or as warning of consequences
 - [ ] Separate concepts vertically. Declare variables close to their usage. Related code should show vertically dense
-- [ ] Objects should be small, do one thing, and hide internal data structer
-- [ ] Unit/feature tests should exists! They should be repeatable, independent, and readable
+- [ ] Objects should be small, do one thing, and hide internal data structure
+- [ ] Unit/feature tests should exist! They should be repeatable, independent, and readable
