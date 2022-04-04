@@ -37,10 +37,9 @@ trait ApiResponder
      *
      * @param string $message
      * @param int $statusCode
-     * @param string|null $errorCode
+     * @param ApiErrorCode|null $errorCode
      * @param array|null $errors
      *
-     * @throws HttpResponseException
      * @return void
      */
     protected function throwError(string $message, int $statusCode, ApiErrorCode $errorCode = null, array $errors = null): void
