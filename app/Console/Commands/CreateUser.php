@@ -68,7 +68,7 @@ class CreateUser extends Command
             return -1;
         }
 
-        $userCreds = ['email' => $attrs['email'], 'password' => Hash::make($attrs['password'])];
+        $userCreds = ['email' => $attrs['email'], 'password' => $attrs['password']];
         $userInfo = [
             'last_name' => $attrs['last_name'],
             'first_name' => $attrs['first_name']
