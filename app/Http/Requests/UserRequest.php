@@ -97,11 +97,12 @@ class UserRequest extends FormRequest
         return [
             'mobile_number.regex' => 'The mobile_number field should follow this format: +63XXXXXXXXXX.',
 
-            /** These are not working. Can't find it anywhere in Laravel 9 docs
+            /**
+             * As of writing, we need to add the namespace for the enum rules
              * @see https://laracasts.com/discuss/channels/laravel/laravel-9-enum-validation-custom-message
              */
-            'sex.validation.enum' => 'Valid values are `male` and `female`.',
-            'roles.*.enum' => 'Valid role values are `regular`, `security`, `medical`, and `health-officer`.',
+            'sex.Illuminate\Validation\Rules\Enum' => 'Valid values are `male` and `female`.',
+            'roles.*.Illuminate\Validation\Rules\Enum' => 'Valid role values are `regular`, `security`, `medical`, and `health-officer`.',
         ];
     }
 }
