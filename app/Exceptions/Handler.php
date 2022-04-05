@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use App\Enums\ApiErrorCode;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Exceptions\ThrottleRequestsException;
 use Illuminate\Http\Request;
@@ -81,6 +82,10 @@ class Handler extends ExceptionHandler
             // if we throw an authentication error
             case $e instanceof AuthenticationException:
                 $response = response()->json(['message' => 'Authentication error', 'error_code' => ApiErrorCode::UNAUTHORIZED_ERROR, 'errors' => null], Response::HTTP_UNAUTHORIZED);
+                break;
+            // if a model is not found (eg. from Model::findOrFail)
+            case $e instanceof ModelNotFoundException:
+                $response = response()->json(['message' => 'Resource not found', 'error_code' => ApiErrorCode::RESOURCE_NOT_FOUND, 'errors' => null], Response::HTTP_NOT_FOUND);
                 break;
             // if we f** up somewhere else
             default:

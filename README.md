@@ -19,7 +19,7 @@ Starter-Kit-API is a Laravel 9 RESTFul starter kit for SPA and mobile clients. T
 - You may now run `php artisan serve` to serve the API locally. Use [Postman](https://www.postman.com/downloads/) and this [documentation](https://google.com) for testing the endpoints
 
 ## Tools ready for you
-- `php artisan fix:style` Runs a code styler for consistency and generate IDE helper PHP Docs. See the command at `app/Console/Commands/FixStyle.php`
+- `php artisan fix:style` Runs a [code styler](https://github.com/stechstudio/Laravel-PHP-CS-Fixer) for consistency and generate [IDE helper PHP Docs](https://github.com/barryvdh/laravel-ide-helper). See the command at `app/Console/Commands/FixStyle.php`
 - `php artisan user:create` Create a user with role. See the command at `app/Console/Commands/CreateUser.php`
 - Running `composer install` or `composer update` will automatically trigger those commands (styling runs `--dry-run` flag, so make sure to always run the styler beforehand)
 
@@ -34,6 +34,9 @@ Starter-Kit-API is a Laravel 9 RESTFul starter kit for SPA and mobile clients. T
 - Create separate API route files per resource/feature. Load all of them in `routes/api.php`
 - Follow and implement the [PHPDoc](https://docs.phpdoc.org/3.0/guide/guides/docblocks.html) style guide
 - Use `app\Exceptions\Handler.php` for centralized error handling
+
+## Note
+- All dates and timestamps are stored and compared in UTC timezone. Clients must convert their local dates to UTC before submitting to the API
 
 ## Authors
 - Jego Carlo Ramos (tshirt-doge)

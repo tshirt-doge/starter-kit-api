@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Enums\SexEnum;
+use App\Enums\Sex;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -62,7 +62,7 @@ class UserInfo extends Model
      */
     protected $casts = [
         'birthday' => 'date',
-        'sex' => SexEnum::class, // Laravel 9 enum casting. @see https://laravel.com/docs/9.x/releases
+        'sex' => Sex::class, // Laravel 9 enum casting. @see https://laravel.com/docs/9.x/releases
     ];
 
     /**

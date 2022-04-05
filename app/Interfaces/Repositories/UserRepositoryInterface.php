@@ -1,39 +1,37 @@
 <?php
 
-namespace App\Interfaces;
+namespace App\Interfaces\Repositories;
 
-interface UserRepository
+interface UserRepositoryInterface
 {
     /**
      * Create a new user
      *
-     * @param array $userCreds
      * @param array $userInfo
-     * @param array $roles
      */
-    public function create(array $userCreds, array $userInfo, array $roles);
+    public function create(array $userInfo);
 
     /**
      * Read user details
      *
-     * @param int $id
+     * @param $id
      */
-    public function read(int $id);
+    public function read($id);
 
     /**
      * Update an existing user
      *
-     * @param int $id
+     * @param $id
      * @param array $newUserInfo
      */
-    public function update(int $id, array $newUserInfo);
+    public function update($id, array $newUserInfo);
 
     /**
      * Delete a user
      *
-     * @param int $id
+     * @param $id
      */
-    public function destroy(int $id);
+    public function destroy($id);
 
     /**
      * Fetch a list of users

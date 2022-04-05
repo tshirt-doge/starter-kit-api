@@ -1,30 +1,30 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Repositories\Eloquent;
 
-use App\Interfaces\UserRepository;
+use App\Interfaces\Repositories\UserRepositoryInterface;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Throwable;
 
-class EloquentUserRepository implements UserRepository
+class UserRepository implements UserRepositoryInterface
 {
     /**
      * @inheritDoc
      * @throws Throwable
      */
-    public function create(array $userCreds, array $userInfo, array $roles)
+    public function create(array $userInfo) : User
     {
-        return DB::transaction(function () use ($roles, $userCreds, $userInfo) {
+        return DB::transaction(function () use ($userInfo) {
             $user = User::create([
-                'email' => $userCreds['email'],
-                'password' => Hash::make($userCreds['password'])
+                'email' => $userInfo['email'],
+                'password' => Hash::make($userInfo['password'])
             ]);
 
             $user->userInfo()->create($userInfo);
 
-            $user->syncRoles(...$roles);
+            $user->syncRoles(...$userInfo['roles']);
 
             return $user;
         });
@@ -33,7 +33,7 @@ class EloquentUserRepository implements UserRepository
     /**
      * @inheritDoc
      */
-    public function read(int $id)
+    public function read($id)
     {
         return User::findOrFail($id);
     }
@@ -41,7 +41,7 @@ class EloquentUserRepository implements UserRepository
     /**
      * @inheritDoc
      */
-    public function update(int $id, array $newUserInfo)
+    public function update($id, array $newUserInfo)
     {
         // TODO: Implement update() method.
     }
@@ -49,7 +49,7 @@ class EloquentUserRepository implements UserRepository
     /**
      * @inheritDoc
      */
-    public function destroy(int $id)
+    public function destroy($id)
     {
         return User::destroy($id);
     }

@@ -3,12 +3,9 @@
 namespace App\Console\Commands;
 
 use App\Enums\Role;
-use App\Interfaces\UserRepository;
+use App\Interfaces\Repositories\UserRepositoryInterface;
 use App\Models\User;
-use Hash;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Testing\Fluent\Concerns\Has;
 use Illuminate\Validation\Rules\Enum;
 use Illuminate\Validation\ValidationException;
 use Throwable;
@@ -36,7 +33,7 @@ class CreateUser extends Command
      * @return int
      * @throws Throwable
      */
-    public function handle(UserRepository $repository)
+    public function handle(UserRepositoryInterface $repository)
     {
         $attrs = [];
         $attrs['email'] = $this->ask('Enter email address');
@@ -44,7 +41,7 @@ class CreateUser extends Command
         $attrs['first_name'] = $this->ask('Enter first name');
         $attrs['last_name'] = $this->ask('Enter last name');
         $attrs['password'] = $this->secret('Enter password');
-        $roles = $this->choice(
+        $attrs['roles'] = $this->choice(
             'Enter role',
             ['regular', 'super-admin', 'health-officer', 'medical', 'security'],
             null,
@@ -60,7 +57,7 @@ class CreateUser extends Command
                     'password' => ['required', 'min:6'],
                     'first_name' => ['required', 'string'],
                     'last_name' => ['required', 'string'],
-                    'roles' => [new Enum(Role::class)]
+                    'roles.*' => [new Enum(Role::class)]
                 ]
             );
         } catch (ValidationException $e) {
@@ -68,14 +65,8 @@ class CreateUser extends Command
             return -1;
         }
 
-        $userCreds = ['email' => $attrs['email'], 'password' => $attrs['password']];
-        $userInfo = [
-            'last_name' => $attrs['last_name'],
-            'first_name' => $attrs['first_name']
-        ];
-
         /** @var User $user */
-        $user = $repository->create($userCreds, $userInfo, $roles);
+        $user = $repository->create($attrs);
         $fullName = $user->userInfo->full_name;
 
         $this->info("User created: $fullName | $user->email");

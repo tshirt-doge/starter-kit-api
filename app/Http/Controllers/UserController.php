@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserRequest;
+use App\Interfaces\Repositories\UserRepositoryInterface;
 use App\Models\User;
 use App\Traits\ApiResponder;
+use Hash;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -11,6 +14,13 @@ use Symfony\Component\HttpFoundation\Response;
 class UserController extends Controller
 {
     use ApiResponder;
+
+    private UserRepositoryInterface $repository;
+
+    public function __construct(UserRepositoryInterface $repository)
+    {
+        $this->repository = $repository;
+    }
 
     /**
      * Display a listing of users
@@ -26,29 +36,40 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param UserRequest $request
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(UserRequest $request)
     {
-        //
+        $userCreds = $request->only('email', 'password');
+        $userCreds['password'] = Hash::make($userCreds['password']);
+        $userInfo = $request->except('email', 'password', 'roles');
+        $roles = $request->only('roles');
+
+        /** @var User $user */
+        $user = $this->repository->create($userCreds, $userInfo, $roles);
+
+        return $this->success(['data' => $user], Response::HTTP_OK);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @return JsonResponse
      */
     public function show($id)
     {
-        //
+        /** @var User $user */
+        $user = $this->repository->read($id);
+
+        return $this->success(['data' => $user], Response::HTTP_OK);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
