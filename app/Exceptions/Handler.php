@@ -58,10 +58,7 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $e)
     {
-        /** We'll only customize if the client negotiates for a json response
-         * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Content_negotiation
-         */
-        if (!$request->expectsJson()) {
+        if (!$request->is('api/*')) {
             return parent::render($request, $e);
         }
 
@@ -88,9 +85,14 @@ class Handler extends ExceptionHandler
                 $response = response()->json(['message' => 'Resource not found', 'error_code' => ApiErrorCode::RESOURCE_NOT_FOUND, 'errors' => null], Response::HTTP_NOT_FOUND);
                 break;
             // if we f** up somewhere else
+            // TODO: Logging
             default:
-                // TODO: Logging - $e->getMessage()
-                $response = response()->json(['message' => $e->getMessage(), 'error_code' => ApiErrorCode::SERVER_ERROR, 'errors' => null], Response::HTTP_INTERNAL_SERVER_ERROR);
+                $errorMessage = $e->getMessage();
+                if (app()->environment('production')) {
+                    $errorMessage = 'An unknown error has occurred';
+                }
+
+                $response = response()->json(['message' => $errorMessage, 'error_code' => ApiErrorCode::SERVER_ERROR, 'errors' => null], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return $response;
@@ -99,12 +101,13 @@ class Handler extends ExceptionHandler
     /**
      * Transform validation error messages. We want consistent error formats.
      */
-    private function transformErrors(ValidationException $exception): object
+    private function transformErrors(ValidationException $exception): array
     {
-        $errors = (object)[];
+        $errors = [];
         foreach ($exception->errors() as $field => $message) {
-            $errors->{$field} = $message;
+            $errors[] = [$field => $message];
         }
+
         return $errors;
     }
 }

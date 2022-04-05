@@ -18,7 +18,9 @@ class ForceJsonResponse
      */
     public function handle(Request $request, Closure $next)
     {
-        /** Force the client to accept JSON */
+        /** Force the client to accept JSON during content-negotiation
+         *  @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Content_negotiation
+         */
         $request->headers->set('Accept', 'application/json');
         return $next($request);
     }

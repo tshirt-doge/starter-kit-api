@@ -8,7 +8,6 @@ use App\Models\User;
 use App\Traits\ApiResponder;
 use Hash;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
@@ -41,15 +40,10 @@ class UserController extends Controller
      */
     public function store(UserRequest $request)
     {
-        $userCreds = $request->only('email', 'password');
-        $userCreds['password'] = Hash::make($userCreds['password']);
-        $userInfo = $request->except('email', 'password', 'roles');
-        $roles = $request->only('roles');
-
         /** @var User $user */
-        $user = $this->repository->create($userCreds, $userInfo, $roles);
+        $user = $this->repository->create($request->validated());
 
-        return $this->success(['data' => $user], Response::HTTP_OK);
+        return $this->success(['data' => $user], Response::HTTP_CREATED);
     }
 
     /**
@@ -69,13 +63,15 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param UserRequest $request
+     * @param $id
+     * @return JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update(UserRequest $request, $id)
     {
-        //
+        $user = $this->repository->update($id, $request->validated());
+
+        return $this->success(['data' => $user], Response::HTTP_OK);
     }
 
     /**

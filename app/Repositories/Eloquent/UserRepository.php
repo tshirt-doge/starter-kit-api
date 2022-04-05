@@ -4,6 +4,7 @@ namespace App\Repositories\Eloquent;
 
 use App\Interfaces\Repositories\UserRepositoryInterface;
 use App\Models\User;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Throwable;
@@ -22,7 +23,7 @@ class UserRepository implements UserRepositoryInterface
                 'password' => Hash::make($userInfo['password'])
             ]);
 
-            $user->userInfo()->create($userInfo);
+            $user->userInfo()->create(Arr::except($userInfo, ['email', 'password', 'roles']));
 
             $user->syncRoles(...$userInfo['roles']);
 
