@@ -2,13 +2,12 @@
 
 namespace App\Exceptions;
 
-use App\Helpers\ApiErrorResponse;
+use App\Enums\ApiErrorCode;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Exceptions\ThrottleRequestsException;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
@@ -59,10 +58,7 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $e)
     {
-        /** We'll only customize if the client negotiates for a json response
-         * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Content_negotiation
-         */
-        if (!$request->expectsJson()) {
+        if (!$request->is('api/*')) {
             return parent::render($request, $e);
         }
 
@@ -70,39 +66,48 @@ class Handler extends ExceptionHandler
             // if route is not found
             case $e instanceof NotFoundHttpException:
             case $e instanceof MethodNotAllowedHttpException:
-                $response = response()->json(['message' => 'Route not found', 'error_code' => ApiErrorResponse::UNKNOWN_ROUTE, 'errors' => null], Response::HTTP_NOT_FOUND);
+                $response = response()->json(['message' => 'Route not found', 'error_code' => ApiErrorCode::UNKNOWN_ROUTE, 'errors' => null], Response::HTTP_NOT_FOUND);
                 break;
             // if we hit the app-level rate-limit
             case $e instanceof ThrottleRequestsException:
-                $response = response()->json(['message' => 'Too many requests', 'error_code' => ApiErrorResponse::RATE_LIMIT, 'errors' => null], Response::HTTP_TOO_MANY_REQUESTS);
+                $response = response()->json(['message' => 'Too many requests', 'error_code' => ApiErrorCode::RATE_LIMIT, 'errors' => null], Response::HTTP_TOO_MANY_REQUESTS);
                 break;
             // if we throw a validation error
             case $e instanceof ValidationException:
-                $response = response()->json(['message' => 'A validation error has occurred', 'error_code' => ApiErrorResponse::VALIDATION_ERROR, 'errors' => $this->transformErrors($e)], Response::HTTP_UNPROCESSABLE_ENTITY);
+                $response = response()->json(['message' => 'A validation error has occurred', 'error_code' => ApiErrorCode::VALIDATION_ERROR, 'errors' => $this->transformErrors($e)], Response::HTTP_UNPROCESSABLE_ENTITY);
                 break;
             // if we throw an authentication error
             case $e instanceof AuthenticationException:
-                $response = response()->json(['message' => 'Authentication error', 'error_code' => ApiErrorResponse::UNAUTHORIZED_ERROR, 'errors' => null], Response::HTTP_UNAUTHORIZED);
+                $response = response()->json(['message' => 'Authentication error', 'error_code' => ApiErrorCode::UNAUTHORIZED_ERROR, 'errors' => null], Response::HTTP_UNAUTHORIZED);
+                break;
+            // if a model is not found (eg. from Model::findOrFail)
+            case $e instanceof ModelNotFoundException:
+                $response = response()->json(['message' => 'Resource not found', 'error_code' => ApiErrorCode::RESOURCE_NOT_FOUND, 'errors' => null], Response::HTTP_NOT_FOUND);
                 break;
             // if we f** up somewhere else
+            // TODO: Logging
             default:
-                // TODO: Logging
-                $response = response()->json(['message' => $e->getMessage(), 'error_code' => ApiErrorResponse::SERVER_ERROR, 'errors' => null], Response::HTTP_INTERNAL_SERVER_ERROR);
+                $errorMessage = $e->getMessage();
+                if (app()->environment('production')) {
+                    $errorMessage = 'An unknown error has occurred';
+                }
+
+                $response = response()->json(['message' => $errorMessage, 'error_code' => ApiErrorCode::SERVER_ERROR, 'errors' => null], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return $response;
     }
 
     /**
-     * Transform validation error messages. We want consistent error formats
+     * Transform validation error messages. We want consistent error formats.
      */
-    private function transformErrors(ValidationException $exception): object
+    private function transformErrors(ValidationException $exception): array
     {
-        $errors = (object)[];
+        $errors = [];
         foreach ($exception->errors() as $field => $message) {
-            $errors->{$field} = $message;
+            $errors[] = [$field => $message];
         }
+
         return $errors;
     }
-
 }

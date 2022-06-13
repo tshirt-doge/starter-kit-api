@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -56,7 +58,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $appends = [
-        'roles'
+        'roles_list'
     ];
 
     /**
@@ -65,7 +67,7 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
+        'email_verified_at' => 'datetime'
     ];
 
     /**
@@ -79,12 +81,14 @@ class User extends Authenticatable
     }
 
     /**
-     * Append latest_antigen_result property on load
+     * Append role_list attribute. This is a Laravel 9 syntax
      *
-     * @return Collection
+     * @return Attribute
      */
-    public function getRolesAttribute() : array
+    public function rolesList(): Attribute
     {
-        return $this->getRoleNames();
+        return new Attribute(
+            fn () => $this->getRoleNames()
+        );
     }
 }

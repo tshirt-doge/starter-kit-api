@@ -11,6 +11,7 @@ namespace App\Traits;
 |
 */
 
+use App\Enums\ApiErrorCode;
 use App\Helpers\ApiErrorResponse;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
@@ -36,13 +37,12 @@ trait ApiResponder
      *
      * @param string $message
      * @param int $statusCode
-     * @param string|null $errorCode
+     * @param ApiErrorCode|null $errorCode
      * @param array|null $errors
      *
-     * @throws HttpResponseException
      * @return void
      */
-    protected function throwError(string $message, int $statusCode, string $errorCode = null, array $errors = null): void
+    protected function throwError(string $message, int $statusCode, ApiErrorCode $errorCode = null, array $errors = null): void
     {
         throw ApiErrorResponse::createErrorResponse($message, $statusCode, $errorCode, $errors);
     }

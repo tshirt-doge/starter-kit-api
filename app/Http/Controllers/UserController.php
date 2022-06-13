@@ -2,15 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserRequest;
+use App\Interfaces\Repositories\UserRepositoryInterface;
 use App\Models\User;
 use App\Traits\ApiResponder;
+use Hash;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
 {
     use ApiResponder;
+
+    private UserRepositoryInterface $repository;
+
+    public function __construct(UserRepositoryInterface $repository)
+    {
+        $this->repository = $repository;
+    }
 
     /**
      * Display a listing of users
@@ -26,35 +35,43 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param UserRequest $request
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(UserRequest $request)
     {
-        //
+        /** @var User $user */
+        $user = $this->repository->create($request->validated());
+
+        return $this->success(['data' => $user], Response::HTTP_CREATED);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @return JsonResponse
      */
     public function show($id)
     {
-        //
+        /** @var User $user */
+        $user = $this->repository->read($id);
+
+        return $this->success(['data' => $user], Response::HTTP_OK);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param UserRequest $request
+     * @param $id
+     * @return JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update(UserRequest $request, $id)
     {
-        //
+        $user = $this->repository->update($id, $request->validated());
+
+        return $this->success(['data' => $user], Response::HTTP_OK);
     }
 
     /**

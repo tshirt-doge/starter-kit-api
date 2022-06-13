@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\ApiErrorResponse;
+use App\Enums\ApiErrorCode;
 use App\Http\Requests\AuthRequest;
 use App\Models\User;
 use App\Traits\ApiResponder;
@@ -23,7 +23,7 @@ class AuthController extends Controller
         $user = User::whereEmail($request['email'])->first();
 
         if (!$user || !Hash::check($request['password'], $user->password)) {
-            $this->throwError('Invalid credentials', Response::HTTP_UNAUTHORIZED, ApiErrorResponse::INVALID_CREDENTIALS);
+            $this->throwError('Invalid credentials', Response::HTTP_UNAUTHORIZED, ApiErrorCode::INVALID_CREDENTIALS);
         }
 
         $token = $user->createToken('api_token')->plainTextToken;
